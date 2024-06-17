@@ -1,8 +1,20 @@
-import React from 'react';
-import { Grid, Box, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Grid, Box, CircularProgress } from '@mui/material';
 import PokemonCard from './PokemonCard';
+import { get10pokemon } from './GetPokemon';
 
 function GameBoard() {
+  const [pokemonArray, setPokemonArray] = useState([]);
+
+  useEffect(() => {
+    async function fetchPokemon() {
+      const data = await get10pokemon();
+      setPokemonArray(data);
+    }
+
+    fetchPokemon();
+  }, []);
+
   return (
     <Box
       sx={{
@@ -12,18 +24,18 @@ function GameBoard() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center',
         padding: '2rem',
         borderRadius: '2rem'
       }}
     >
-      <Grid container spacing={4} alignItems="center">
-        <Grid item>
-          <PokemonCard />
-        </Grid>
-        <Grid item>
-          <PokemonCard />
-        </Grid>
-      </Grid>
+      {pokemonArray.length === 0 ? <CircularProgress></CircularProgress> : <Grid container spacing={5} alignItems="center">
+        {pokemonArray.map((pokemon, index) => (
+          <Grid item key={index}>
+            <PokemonCard pokemonname={pokemon.forms[0].name} />
+          </Grid>
+        ))}
+      </Grid>}
     </Box>
   );
 }
