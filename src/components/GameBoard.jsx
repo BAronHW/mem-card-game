@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Box, Typography } from '@mui/material';
-import Card from './Card';
+import PokemonCard from './PokemonCard';
 
 function GameBoard() {
   return (
@@ -16,8 +16,13 @@ function GameBoard() {
         borderRadius: '2rem'
       }}
     >
-      <Grid container spacing={2} justifyContent="center">
-        {/* <Card></Card> */}
+      <Grid container spacing={4} alignItems="center">
+        <Grid item>
+          <PokemonCard />
+        </Grid>
+        <Grid item>
+          <PokemonCard />
+        </Grid>
       </Grid>
     </Box>
   );
