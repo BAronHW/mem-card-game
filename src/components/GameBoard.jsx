@@ -5,15 +5,27 @@ import { get10pokemon } from './GetPokemon';
 
 function GameBoard() {
   const [pokemonArray, setPokemonArray] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchPokemon() {
+      setLoading(true);
       const data = await get10pokemon();
       setPokemonArray(data);
+      setLoading(false);
     }
 
     fetchPokemon();
   }, []);
+
+  const checkAllUnique = async (data) => {
+    let set = new Set();
+    data.forEach(pokemon => set.add(pokemon.forms[0].name));
+    if (set.size !== data.length) {
+      await fetchPokemon(); // Refetch if not unique
+    }
+    setAllUnique(set.size === data.length);
+  };
 
   return (
     <Box
@@ -29,13 +41,19 @@ function GameBoard() {
         borderRadius: '2rem'
       }}
     >
-      {pokemonArray.length === 0 ? <CircularProgress></CircularProgress> : <Grid container spacing={5} alignItems="center">
-        {pokemonArray.map((pokemon, index) => (
-          <Grid item key={index}>
-            <PokemonCard pokemonname={pokemon.forms[0].name} />
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <Grid container spacing={5} alignItems="center">
+            {pokemonArray.map((pokemon, index) => (
+              <Grid item key={index}>
+                <PokemonCard pokemonname={pokemon.forms[0].name} img={pokemon.sprites.front_default} />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>}
+        </>
+      )}
     </Box>
   );
 }
