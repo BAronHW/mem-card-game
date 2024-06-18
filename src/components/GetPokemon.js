@@ -9,23 +9,34 @@ export default async function getsinglepokemon() {
 export function checkAllUnique(array){
     let set = new Set();
     array.forEach(element => {
-        set.add(element);
+        set.add(element.forms[0].name);
     });
-    return(set.size==array.length)
-
+    return set.size === array.length;
 }
 
-export async function get10pokemon(){
-    const pokemonarray = [];
-    for(let i=1;i<=10;i++){
+
+export async function get10pokemon() {
+    let pokemonarray = [];
+    let attempts = 0;
+
+    for (let i = 1; i <= 10; i++) {
         const singlepokemon = await getsinglepokemon();
         pokemonarray.push(singlepokemon);
     }
-    if(checkAllUnique(pokemonarray)){
-        return pokemonarray;
-    }else{
-        return get10pokemon();
+
+    while (!checkAllUnique(pokemonarray)) {
+        pokemonarray = [];
+        for (let i = 1; i <= 10; i++) {
+            const singlepokemon = await getsinglepokemon();
+            pokemonarray.push(singlepokemon);
+        }
+        if (checkAllUnique(pokemonarray)) {
+            return pokemonarray;
+        }
+        attempts++;
     }
+    return pokemonarray;
 }
+
   
   

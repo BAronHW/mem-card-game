@@ -7,9 +7,10 @@ import ScoreBoard from './ScoreBoard';
 function GameBoard() {
   const [pokemonArray, setPokemonArray] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pickedArray, setPickedArray] = useState([]); // an array of all the pokemon who have already been picked.
+  const [pickedArray, setPickedArray] = useState([]);
   const [highscore, setHighscore] = useState(0);
   const [score, setScore] = useState(0);
+  const [won, setWon] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -20,7 +21,8 @@ function GameBoard() {
         setLoading(false);
       }
       fetchPokemon();
-    }, 1000);
+    }, 1000); 
+    
   }, []);
 
   function shuffleArray(array) {
@@ -32,24 +34,26 @@ function GameBoard() {
   }
 
   const onPokemonClicked = (pokemonName) => {
-    // When one of the cards is clicked get its name 
-    // Check if this name is in the pickedArray if it's not push it into the picked array and increment the score by one.
-    // If the score is higher than the highscore set the score value to the highscore.
-    // If the name is in the pickedArray then set the score to 0.
     if (pickedArray.includes(pokemonName)) {
       setScore(0);
       setPickedArray([]);
       alert("Game over");
-      const shuffledArray = shuffleArray([...pokemonArray]);
-      setPokemonArray(shuffledArray);
       if (score > highscore) {
         setHighscore(score);
       }
+      setPokemonArray(shuffleArray([...pokemonArray]));
     } else {
       setPickedArray([...pickedArray, pokemonName]);
       setScore(score + 1);
-      const shuffledArray = shuffleArray([...pokemonArray]); //create a copy of the array and shuffle.
-      setPokemonArray(shuffledArray);//set the shuffled copy of the original array as the pokemonarray
+      setPokemonArray(shuffleArray([...pokemonArray]));
+      checkIfWin(pokemonArray, [...pickedArray, pokemonName]);
+    }
+  };
+
+  const checkIfWin = (arr, pickedArray) => {
+    if (arr.length === pickedArray.length) {
+      alert("You have won, congratulations!");
+      setWon(true);
     }
   };
 
