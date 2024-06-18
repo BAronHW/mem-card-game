@@ -12,14 +12,15 @@ function GameBoard() {
   const [score, setScore] = useState(0);
 
   useEffect(() => {
-    async function fetchPokemon() {
-      setLoading(true);
-      const data = await get10pokemon();
-      setPokemonArray(data);
-      setLoading(false);
-    }
-
-    fetchPokemon();
+    setTimeout(() => {
+      async function fetchPokemon() {
+        setLoading(true);
+        const data = await get10pokemon();
+        setPokemonArray(data);
+        setLoading(false);
+      }
+      fetchPokemon();
+    }, 1000);
   }, []);
 
   function shuffleArray(array) {
@@ -35,22 +36,20 @@ function GameBoard() {
     // Check if this name is in the pickedArray if it's not push it into the picked array and increment the score by one.
     // If the score is higher than the highscore set the score value to the highscore.
     // If the name is in the pickedArray then set the score to 0.
-
     if (pickedArray.includes(pokemonName)) {
-      if (score > highscore) {
-        setHighscore(score);
-      }
       setScore(0);
       setPickedArray([]);
       alert("Game over");
       const shuffledArray = shuffleArray([...pokemonArray]);
       setPokemonArray(shuffledArray);
-      
+      if (score > highscore) {
+        setHighscore(score);
+      }
     } else {
       setPickedArray([...pickedArray, pokemonName]);
       setScore(score + 1);
-      const shuffledArray = shuffleArray([...pokemonArray]);
-      setPokemonArray(shuffledArray);
+      const shuffledArray = shuffleArray([...pokemonArray]); //create a copy of the array and shuffle.
+      setPokemonArray(shuffledArray);//set the shuffled copy of the original array as the pokemonarray
     }
   };
 
