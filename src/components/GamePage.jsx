@@ -5,7 +5,6 @@ import ScoreBoard from './ScoreBoard'
 function GamePage() {
   return (
     <div className='flex flex-col'>
-      <ScoreBoard></ScoreBoard>
       <GameBoard></GameBoard>
     </div>
   )
