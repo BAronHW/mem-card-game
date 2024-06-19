@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
 
 function ScoreBoard({ score, highscore }) {
   return (
@@ -22,5 +23,10 @@ function ScoreBoard({ score, highscore }) {
     </Box>
   );
 }
+
+ScoreBoard.propTypes = {
+  score: PropTypes.number.isRequired,
+  highscore: PropTypes.number.isRequired,
+};
 
 export default ScoreBoard;

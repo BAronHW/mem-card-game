@@ -1,62 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Grid, Box, CircularProgress } from '@mui/material';
 import PokemonCard from './PokemonCard';
-import { get10pokemon } from './GetPokemon';
-import ScoreBoard from './ScoreBoard';
+import PropTypes from 'prop-types';
 
-function GameBoard() {
-  const [pokemonArray, setPokemonArray] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [pickedArray, setPickedArray] = useState([]);
-  const [highscore, setHighscore] = useState(0);
-  const [score, setScore] = useState(0);
-  const [won, setWon] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      async function fetchPokemon() {
-        setLoading(true);
-        const data = await get10pokemon();
-        setPokemonArray(data);
-        setLoading(false);
-      }
-      fetchPokemon();
-    }, 1000); 
-    
-  }, []);
-
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
-
-  const onPokemonClicked = (pokemonName) => {
-    if (pickedArray.includes(pokemonName)) {
-      setScore(0);
-      setPickedArray([]);
-      alert("Game over");
-      if (score > highscore) {
-        setHighscore(score);
-      }
-      setPokemonArray(shuffleArray([...pokemonArray]));
-    } else {
-      setPickedArray([...pickedArray, pokemonName]);
-      setScore(score + 1);
-      setPokemonArray(shuffleArray([...pokemonArray]));
-      checkIfWin(pokemonArray, [...pickedArray, pokemonName]);
-    }
-  };
-
-  const checkIfWin = (arr, pickedArray) => {
-    if (arr.length === pickedArray.length) {
-      alert("You have won, congratulations!");
-      setWon(true);
-    }
-  };
-
+function GameBoard({ pokemonArray, loading, onPokemonClicked }) {
   return (
     <Box
       sx={{
@@ -74,23 +21,26 @@ function GameBoard() {
       {loading ? (
         <CircularProgress />
       ) : (
-        <>
-          <ScoreBoard score={score} highscore={highscore} />
-          <Grid container spacing={5} alignItems="center">
-            {pokemonArray.map((pokemon, index) => (
-              <Grid item key={index}>
-                <PokemonCard 
-                  pokemonname={pokemon.forms[0].name} 
-                  img={pokemon.sprites.front_default} 
-                  onClick={() => onPokemonClicked(pokemon.forms[0].name)} 
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </>
+        <Grid container spacing={5} alignItems="center">
+          {pokemonArray.map((pokemon, index) => (
+            <Grid item key={index}>
+              <PokemonCard 
+                pokemonname={pokemon.forms[0].name} 
+                img={pokemon.sprites.front_default} 
+                onClick={() => onPokemonClicked(pokemon.forms[0].name)} 
+              />
+            </Grid>
+          ))}
+        </Grid>
       )}
     </Box>
   );
 }
+
+GameBoard.propTypes = {
+  pokemonArray: PropTypes.array.isRequired,
+  loading: PropTypes.bool.isRequired,
+  onPokemonClicked: PropTypes.func.isRequired,
+};
 
 export default GameBoard;

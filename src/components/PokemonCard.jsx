@@ -1,5 +1,6 @@
 import React from 'react';
 import Tilt from 'react-parallax-tilt';
+import PropTypes from 'prop-types';
 
 function PokemonCard({ pokemonname, img, onClick }) {
   return (
@@ -18,9 +19,15 @@ function PokemonCard({ pokemonname, img, onClick }) {
       >
         <h1 className="text-white text-center">{pokemonname}</h1>
         <img className="w-32 h-32 object-contain" src={img} alt={`${pokemonname} image`} />
-      </div> 
+      </div>
     </Tilt>
   );
 }
+
+PokemonCard.propTypes = {
+  pokemonname: PropTypes.string.isRequired,
+  img: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
 
 export default PokemonCard;
